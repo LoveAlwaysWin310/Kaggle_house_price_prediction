@@ -21,4 +21,4 @@
 │-- 📁 outputs/              # 预测结果及可视化文件
 │-- 📄 main.py               # 主训练脚本
 │-- 📄 README.md             # 项目介绍（你正在看的这个文件）
-│-- 📄 data_description.txt  #数据集介绍
+│-- 📄 data_description.txt  # 数据集介绍
