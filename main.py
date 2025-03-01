@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from torch.utils.data import TensorDataset,DataLoader
 from sklearn.model_selection import train_test_split
 
+
 class HousePricePredict(nn.Module):  #模型搭建，简单MLP网络
     def __init__(self, input_dim, hidden_dim1, hidden_dim2, output_dim):
         super(HousePricePredict, self).__init__()
@@ -46,8 +47,8 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print("Using device:", device)
 
 #载入数据
-train_data = pd.read_csv('train.csv').iloc[:,1:-1]  #提取特征，不要第一列编号，也不要最后一列需要预测的target
-test_data = pd.read_csv('test.csv').iloc[:,1:]      #不要第一列编号
+train_data = pd.read_csv('data/train.csv').iloc[:,1:-1]  #提取特征，不要第一列编号，也不要最后一列需要预测的target
+test_data = pd.read_csv('data/test.csv').iloc[:,1:]      #不要第一列编号
 features = pd.concat([train_data, test_data], axis=0)
 
 numeric_type_features = features.dtypes[features.dtypes != 'object'].index  #提取出数值型的列并将其进行数据归一化
@@ -59,7 +60,7 @@ features = pd.get_dummies(features, columns=Nonnumerical_type_features, dummy_na
 #将合并的数据重新分为训练集和测试集，并且将其转换为tensor
 train_num = train_data.shape[0]
 train_dataset = torch.tensor(features.iloc[:train_num,:].values,dtype=torch.float)
-train_label = torch.tensor(pd.read_csv('train.csv').iloc[:, -1].values,dtype=torch.float).reshape(-1,1)
+train_label = torch.tensor(pd.read_csv('data/train.csv').iloc[:, -1].values,dtype=torch.float).reshape(-1,1)
 test_dataset = torch.Tensor(features.iloc[train_num:,:].values)
 # print(train_dataset.shape)
 # print(test_dataset.shape)
@@ -131,8 +132,8 @@ with torch.no_grad():
     pred_test = pred_test.cpu().numpy().flatten()
     # print(pred_test)
 submission = pd.DataFrame({
-    'Id': pd.read_csv('test.csv')['Id'],
+    'Id': pd.read_csv('data/test.csv')['Id'],
     'SalePrice': pred_test
 })
-submission.to_csv('submission.csv', index=False)
+submission.to_csv('outputs/submission.csv', index=False)
 print("Submission file saved.")
