@@ -43,9 +43,9 @@ class RMSLELoss(nn.Module):
 
 # 训练参数
 input_dim = 287  # 输入维度
-hidden_dim1 = 128
-hidden_dim2 = 64
-hidden_dim3 = 32
+hidden_dim1 = 256
+hidden_dim2 = 128
+hidden_dim3 = 64
 output_dim = 1  # 输出维度
 epoch = 300  # 训练轮数
 batch_size = 128
