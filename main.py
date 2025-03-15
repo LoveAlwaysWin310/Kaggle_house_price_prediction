@@ -9,7 +9,7 @@ from sklearn.model_selection import train_test_split
 
 # 定义神经网络模型
 class HousePricePredict(nn.Module):
-    def __init__(self, input_dim, hidden_dim1, hidden_dim2, output_dim):
+    def __init__(self, input_dim, hidden_dim1, hidden_dim2,hidden_dim3, output_dim):
         super(HousePricePredict, self).__init__()
 
         self.fc1 = nn.Linear(input_dim, hidden_dim1)
@@ -17,11 +17,14 @@ class HousePricePredict(nn.Module):
         self.relu = nn.ReLU()
         self.fc2 = nn.Linear(hidden_dim1, hidden_dim2)
         self.bn2 = nn.BatchNorm1d(hidden_dim2)
-        self.fc_out = nn.Linear(hidden_dim2, output_dim)
+        self.fc3 = nn.Linear(hidden_dim2, hidden_dim3)
+        self.bn3 = nn.BatchNorm1d(hidden_dim3)
+        self.fc_out = nn.Linear(hidden_dim3, output_dim)
 
     def forward(self, x):
         x = self.relu(self.bn1(self.fc1(x)))
         x = self.relu(self.bn2(self.fc2(x)))
+        x = self.relu(self.bn3(self.fc3(x)))
         x = self.fc_out(x)
         return x
 
@@ -41,7 +44,8 @@ class RMSLELoss(nn.Module):
 # 训练参数
 input_dim = 287  # 输入维度
 hidden_dim1 = 128
-hidden_dim2 = 32
+hidden_dim2 = 64
+hidden_dim3 = 32
 output_dim = 1  # 输出维度
 epoch = 300  # 训练轮数
 batch_size = 128
@@ -83,7 +87,7 @@ train_loader = DataLoader(Train_dataset, batch_size=batch_size, shuffle=True)
 val_loader = DataLoader(Val_dataset, batch_size=batch_size, shuffle=False)
 
 # 初始化模型
-model = HousePricePredict(input_dim, hidden_dim1, hidden_dim2, output_dim)
+model = HousePricePredict(input_dim, hidden_dim1, hidden_dim2,hidden_dim3, output_dim)
 optimizer = torch.optim.Adam(model.parameters(), lr)
 criterion = RMSLELoss()
 model.to(device)
